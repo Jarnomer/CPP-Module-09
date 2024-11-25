@@ -23,8 +23,8 @@ public: // methods
   void getExchangeRates(const std::string &fileName);
 
 private: // utilities
-  void printRateInfo(std::string &date, std::string &value) const;
+  void printRateInfo(std::string &date, double amount) const;
   std::string trimWhiteSpace(std::string &line) const;
   bool isValidDate(const std::string &date) const;
-  bool isValidValue(const std::string &value) const;
+  bool isValidValue(double amount) const;
 };

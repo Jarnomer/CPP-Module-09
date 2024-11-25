@@ -1,4 +1,5 @@
 #include <BitcoinExchange.hpp>
+#include <string>
 
 BitcoinExchange::BitcoinExchange(void) {
   std::cout << "Default constructor called\n";
@@ -38,9 +39,11 @@ void BitcoinExchange::getExchangeRates(const std::string &fileName) {
       if (!std::getline(readLine, date, '|') ||
           !std::getline(readLine, value)) {
         std::cerr << "Invalid line format: " << line << "\n";
-      } else if (isValidDate(trimWhiteSpace(date)) &&
-                 isValidValue(trimWhiteSpace(value))) {
-        printRateInfo(date, value);
+      } else if (isValidDate(trimWhiteSpace(date))) {
+        double amount = std::stod(trimWhiteSpace(value));
+        if (isValidValue(amount)) {
+          printRateInfo(date, amount);
+        }
       }
     }
     input.close();
@@ -49,15 +52,19 @@ void BitcoinExchange::getExchangeRates(const std::string &fileName) {
   }
 }
 
-void BitcoinExchange::printRateInfo(std::string &date,
-                                    std::string &value) const {
-  for (const auto &[day, rate] : data) {
-    if (day == date) {
-      std::cout << day << " => " << value << " = " << rate << "\n";
-      return;
+void BitcoinExchange::printRateInfo(std::string &day, double amount) const {
+  std::string closestDate{};
+  double closestRate = 0;
+  for (const auto &[date, rate] : data) {
+    if (date <= day) {
+      closestDate = date;
+      closestRate = rate;
+    } else {
+      break;
     }
   }
-  std::cerr << "Date not found from data: " << date << "\n";
+  std::cout << closestDate << " => " << amount << " = " << amount * closestRate
+            << "\n";
 }
 
 std::string BitcoinExchange::trimWhiteSpace(std::string &str) const {
@@ -75,10 +82,9 @@ bool BitcoinExchange::isValidDate(const std::string &str) const {
   }
 }
 
-bool BitcoinExchange::isValidValue(const std::string &str) const {
-  double value = std::stod(str);
+bool BitcoinExchange::isValidValue(double value) const {
   if (value > 1000 || value < 0) {
-    std::cerr << "Value out of range: " << str << "\n";
+    std::cerr << "Value out of range: " << value << "\n";
     return false;
   } else {
     return true;
