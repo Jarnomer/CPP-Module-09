@@ -3,7 +3,7 @@
 int main(int argc, char **argv) {
   if (argc != 2) {
     std::cout << "Usage: ./btc <filename>\n";
-    return EXIT_FAILURE;
+    return 1;
   } else {
     try {
       BitcoinExchange btc;
