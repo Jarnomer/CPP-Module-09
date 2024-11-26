@@ -14,7 +14,17 @@ void RPN::calculate(const std::string &expression) {
       performCalculation(c);
     }
   }
-  std::cout << std::to_string(stack.top()) << "\n";
+  showResult();
+}
+
+void RPN::showResult(void) {
+  if (!number.empty()) {
+    appendNumber(number);
+  } else if (stack.size() != 1) {
+    throw std::invalid_argument("Syntax error");
+  } else {
+    std::cout << stack.top() << "\n";
+  }
 }
 
 void RPN::performCalculation(char c) {
