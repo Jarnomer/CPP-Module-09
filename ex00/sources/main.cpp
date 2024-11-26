@@ -8,11 +8,11 @@ int main(int argc, char **argv) {
     try {
       BitcoinExchange btc;
       btc.importData("data.csv");
-      btc.getExchangeRates(argv[1]);
+      btc.printRates(argv[1]);
     } catch (const std::runtime_error &e) {
-      std::cout << "Runtime exception: " << e.what() << "\n";
+      std::cerr << "Runtime exception: " << e.what() << "\n";
     } catch (...) {
-      std::cout << "Unexpected exception occured!\n";
+      std::cerr << "Unexpected exception occured!\n";
     }
   }
   return 0;

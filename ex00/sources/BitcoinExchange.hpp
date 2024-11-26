@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <regex>
@@ -19,12 +20,17 @@ public: // deconstructor
   ~BitcoinExchange(void);
 
 public: // methods
-  void importData(const std::string fileName);
-  void getExchangeRates(const std::string &fileName);
+  void importData(const std::string &fileName);
+  void printRates(const std::string &fileName);
 
-private: // utilities
-  void printRateInfo(std::string &date, double amount) const;
+private: // utils
+  void appendData(const std::string &date, double amount);
+  void convertRate(const std::string &date, double amount) const;
   std::string trimWhiteSpace(std::string &line) const;
   bool isValidDate(const std::string &date) const;
   bool isValidValue(double amount) const;
+
+private: // parser
+  void parseFile(const std::string &fileName, char delim,
+                 const std::function<void(const std::string &, double)> &func);
 };
