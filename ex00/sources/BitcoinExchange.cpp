@@ -11,19 +11,18 @@ BitcoinExchange::~BitcoinExchange(void) {
 void BitcoinExchange::convertRate(const std::string &day, double amount) const {
   if (!isValidValue(amount)) {
     return;
-  }
-  std::string targetDate{};
-  double targetRate = 0;
-  for (const auto &[date, rate] : data) {
-    if (date <= day) {
-      targetDate = date;
-      targetRate = rate;
+  } else {
+    auto it = data.upper_bound(day);
+    if (it == data.begin()) {
+      std::cerr << "No date found: " << day << "\n";
+      return;
     } else {
-      break;
+      --it;
+      auto [targetDate, targetRate] = *it;
+      std::cout << targetDate << " => " << amount << " = "
+                << amount * targetRate << "\n";
     }
   }
-  std::cout << targetDate << " => " << amount << " = " << amount * targetRate
-            << "\n";
 }
 
 void BitcoinExchange::printRates(const std::string &fileName) {
@@ -44,7 +43,7 @@ void BitcoinExchange::importData(const std::string &fileName) {
 
 void BitcoinExchange::parseFile(
     const std::string &fileName, char delim,
-    const std::function<void(const std::string &, double)> &callback) {
+    const std::function<void(const std::string &, double)> &append_or_print) {
   std::ifstream input(fileName);
   std::string line, date, value;
   if (input.is_open()) {
@@ -57,7 +56,7 @@ void BitcoinExchange::parseFile(
       } else if (isValidDate(trimWhiteSpace(date))) {
         try {
           double amount = std::stod(trimWhiteSpace(value));
-          callback(date, amount);
+          append_or_print(date, amount);
         } catch (const std::invalid_argument &e) {
           std::cerr << "Invalid argument: " << value << "\n";
         } catch (const std::out_of_range &e) {
