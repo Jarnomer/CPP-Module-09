@@ -22,9 +22,8 @@ void RPN::showResult(void) {
     appendNumber(number);
   } else if (stack.size() != 1) {
     throw std::invalid_argument("Syntax error");
-  } else {
-    std::cout << stack.top() << "\n";
   }
+  std::cout << stack.top() << "\n";
 }
 
 void RPN::performCalculation(char c) {
