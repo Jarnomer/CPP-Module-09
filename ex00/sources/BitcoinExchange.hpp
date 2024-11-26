@@ -24,8 +24,8 @@ public: // methods
   void printRates(const std::string &fileName);
 
 private: // utils
-  void appendData(const std::string &date, double amount);
-  void convertRate(const std::string &date, double amount) const;
+  void importInfo(const std::string &date, double amount);
+  void printRate(const std::string &date, double amount) const;
   std::string trimWhiteSpace(std::string &line) const;
   bool isValidDate(const std::string &date) const;
   bool isValidValue(double amount) const;

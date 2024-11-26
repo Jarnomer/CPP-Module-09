@@ -8,38 +8,35 @@ BitcoinExchange::~BitcoinExchange(void) {
   std::cout << "Deconstructor called\n";
 }
 
-void BitcoinExchange::convertRate(const std::string &day, double amount) const {
+void BitcoinExchange::printRate(const std::string &date, double amount) const {
   if (!isValidValue(amount)) {
     return;
   } else {
-    auto it = data.find(day);
-    if (it == data.end()) {
-      it = data.upper_bound(day);
-      if (it == data.begin()) {
-        std::cerr << "No date found: " << day << "\n";
-        return;
-      } else {
-        --it; // move to closest previous date
-      }
+    auto it = data.upper_bound(date);
+    if (it == data.begin()) {
+      std::cerr << "No date found: " << date << "\n";
+      return;
+    } else {
+      auto [targetDate, targetRate] = *(--it);
+      std::cout << targetDate << " => " << amount << " = "
+                << amount * targetRate << "\n";
     }
-    auto [date, rate] = *it;
-    std::cout << date << " => " << amount << " = " << amount * rate << "\n";
   }
 }
 
 void BitcoinExchange::printRates(const std::string &fileName) {
   parseFile(fileName, '|', [this](const std::string &date, double amount) {
-    convertRate(date, amount);
+    printRate(date, amount);
   });
 }
 
-void BitcoinExchange::appendData(const std::string &date, double amount) {
+void BitcoinExchange::importInfo(const std::string &date, double amount) {
   data.emplace(date, amount);
 }
 
 void BitcoinExchange::importData(const std::string &fileName) {
   parseFile(fileName, ',', [this](const std::string &date, double amount) {
-    appendData(date, amount);
+    importInfo(date, amount);
   });
 }
 
