@@ -12,16 +12,18 @@ void BitcoinExchange::convertRate(const std::string &day, double amount) const {
   if (!isValidValue(amount)) {
     return;
   } else {
-    auto it = data.upper_bound(day);
-    if (it == data.begin()) {
-      std::cerr << "No date found: " << day << "\n";
-      return;
-    } else {
-      --it;
-      auto [targetDate, targetRate] = *it;
-      std::cout << targetDate << " => " << amount << " = "
-                << amount * targetRate << "\n";
+    auto it = data.find(day);
+    if (it == data.end()) {
+      it = data.upper_bound(day);
+      if (it == data.begin()) {
+        std::cerr << "No date found: " << day << "\n";
+        return;
+      } else {
+        --it; // move to closest previous date
+      }
     }
+    auto [date, rate] = *it;
+    std::cout << date << " => " << amount << " = " << amount * rate << "\n";
   }
 }
 
