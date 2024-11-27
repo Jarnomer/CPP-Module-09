@@ -15,13 +15,14 @@ void RPN::calculate(const std::string &expression) {
       performCalculation(c);
     }
   }
-  showResult();
+  printResult();
 }
 
 void RPN::appendStack(const std::string &value) {
   if (!number.empty()) {
     stack.push(std::stoi(value));
   }
+  // no catch, returns to main in case of error
 }
 
 bool RPN::isValidOperation(char c) {
@@ -61,12 +62,14 @@ int RPN::performOperation(int a, int b, char op) {
   }
 }
 
-void RPN::showResult(void) {
+void RPN::printResult(void) {
   if (!number.empty()) {
+    // handles trailing number
     appendStack(number);
   }
   if (stack.size() != 1) {
     throw std::invalid_argument("Syntax error");
+  } else {
+    std::cout << stack.top() << "\n";
   }
-  std::cout << stack.top() << "\n";
 }

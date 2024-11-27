@@ -24,5 +24,5 @@ public:
   static bool isValidOperation(char c);
   static void performCalculation(char c);
   static int performOperation(int a, int b, char op);
-  static void showResult(void);
+  static void printResult(void);
 };
