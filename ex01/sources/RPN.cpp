@@ -18,11 +18,11 @@ void RPN::calculate(const std::string &expression) {
   printResult();
 }
 
+// no try-catch, return to main in case of error
 void RPN::appendStack(const std::string &value) {
   if (!number.empty()) {
     stack.push(std::stoi(value));
   }
-  // no catch, returns to main in case of error
 }
 
 bool RPN::isValidOperation(char c) {
@@ -33,6 +33,7 @@ bool RPN::isValidOperation(char c) {
   }
 }
 
+// no try-catch, return to main in case of error
 void RPN::performCalculation(char c) {
   int a, b, result;
   b = stack.top();
@@ -64,7 +65,6 @@ int RPN::performOperation(int a, int b, char op) {
 
 void RPN::printResult(void) {
   if (!number.empty()) {
-    // handles trailing number
     appendStack(number);
   }
   if (stack.size() != 1) {

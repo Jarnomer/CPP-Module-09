@@ -9,10 +9,8 @@ int main(int argc, char **argv) {
       BitcoinExchange btc;
       btc.importData("data.csv");
       btc.printRates(argv[1]);
-    } catch (const std::runtime_error &e) {
-      std::cerr << "Runtime exception: " << e.what() << "\n";
-    } catch (...) {
-      std::cerr << "Unexpected exception occured!\n";
+    } catch (const std::exception &e) {
+      std::cerr << "Error: " << e.what() << "\n";
     }
   }
   return 0;

@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
     try {
       RPN::calculate(argv[1]);
     } catch (const std::exception &e) {
-      std::cerr << "Exception occured: " << e.what() << "\n";
+      std::cerr << "Error: " << e.what() << "\n";
     }
   }
   return 0;
