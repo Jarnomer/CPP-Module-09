@@ -2,13 +2,14 @@
 
 std::stack<int> RPN::stack;
 std::string RPN::number;
+const std::string RPN::tokens = "+-/*";
 
 void RPN::calculate(const std::string &expression) {
   for (char c : expression) {
     if (std::isdigit(c)) {
       number += c;
     } else if (std::isspace(c)) {
-      appendNumber(number);
+      appendStack(number);
       number.clear();
     } else if (isValidOperation(c)) {
       performCalculation(c);
@@ -17,13 +18,18 @@ void RPN::calculate(const std::string &expression) {
   showResult();
 }
 
-void RPN::showResult(void) {
+void RPN::appendStack(const std::string &value) {
   if (!number.empty()) {
-    appendNumber(number);
-  } else if (stack.size() != 1) {
-    throw std::invalid_argument("Syntax error");
+    stack.push(std::stoi(value));
   }
-  std::cout << stack.top() << "\n";
+}
+
+bool RPN::isValidOperation(char c) {
+  if (tokens.find(c) == std::string::npos || stack.size() < 2) {
+    throw std::invalid_argument("Syntax error");
+  } else {
+    return true;
+  }
 }
 
 void RPN::performCalculation(char c) {
@@ -34,26 +40,6 @@ void RPN::performCalculation(char c) {
   stack.pop();
   result = performOperation(a, b, c);
   stack.push(result);
-}
-
-void RPN::appendNumber(const std::string &value) {
-  if (!number.empty())
-    try {
-      stack.push(std::stoi(value));
-    } catch (const std::invalid_argument &e) {
-      std::cerr << "Invalid argument: " << value << "\n";
-    } catch (const std::out_of_range &e) {
-      std::cerr << "Out of range: " << value << "\n";
-    }
-}
-
-bool RPN::isValidOperation(char c) {
-  static const std::string tokens = "+-/*";
-  if (tokens.find(c) == std::string::npos || stack.size() <= 1) {
-    throw std::invalid_argument("Syntax error");
-  } else {
-    return true;
-  }
 }
 
 int RPN::performOperation(int a, int b, char op) {
@@ -73,4 +59,14 @@ int RPN::performOperation(int a, int b, char op) {
   default:
     throw std::invalid_argument("Syntax error");
   }
+}
+
+void RPN::showResult(void) {
+  if (!number.empty()) {
+    appendStack(number);
+  }
+  if (stack.size() != 1) {
+    throw std::invalid_argument("Syntax error");
+  }
+  std::cout << stack.top() << "\n";
 }
