@@ -4,6 +4,7 @@ SOURCEDIR   := sources
 BUILDDIR    := build
 
 NUMCOUNT	:= 10
+INT_MAX     := 1000
 
 RM          := rm -rf
 SCREENCLEAR := printf "\033c"
@@ -30,7 +31,7 @@ re: fclean
 
 run: all
 	$(SCREENCLEAR)
-	./$(NAME) $(shell shuf -i 0-2147483647 -n $(NUMCOUNT))
+	./$(NAME) $(shell shuf -i 0-$(INT_MAX) -n $(NUMCOUNT))
 
 $(NAME): $(OBJECTS)
 	$(CC) $(CFLAGS) $^ -o $@
